@@ -23,7 +23,6 @@ describe('BabysitterBooking', () => {
     ReactTestUtils.Simulate.submit(form);
 
     const validation = booking.state.validation;
-'Start time is earlier than the allowed time.'
     expect(validation.code).toEqual(400);
     expect(validation.message).toEqual('Start time is earlier than the allowed time.');
   });
