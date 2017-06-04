@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import BabysitterBooking from '../BabysitterBooking';
 
-describe('BabysitterBooking', () => {
+describe('BabysitterBooking startTime ', () => {
 
   it('returns a 400 error if startTime is earlier than 5:00PM', () => {
     const startTime = {
@@ -22,7 +22,7 @@ describe('BabysitterBooking', () => {
 
     ReactTestUtils.Simulate.submit(form);
 
-    const validation = booking.state.validation;
+    const validation = booking.state.st_validation;
     expect(validation.code).toEqual(400);
     expect(validation.message).toEqual('Start time is earlier than the allowed time.');
   });
@@ -40,7 +40,7 @@ describe('BabysitterBooking', () => {
 
     ReactTestUtils.Simulate.submit(form);
 
-    const validation = booking.state.validation;
+    const validation = booking.state.st_validation;
     expect(validation.code).toEqual(200);
     expect(validation.message).toEqual('OK');
   });
@@ -58,7 +58,7 @@ describe('BabysitterBooking', () => {
 
     ReactTestUtils.Simulate.submit(form);
 
-    const validation = booking.state.validation;
+    const validation = booking.state.st_validation;
     expect(validation.code).toEqual(200);
     expect(validation.message).toEqual('OK');
   });
@@ -76,8 +76,28 @@ describe('BabysitterBooking', () => {
 
     ReactTestUtils.Simulate.submit(form);
 
-    const validation = booking.state.validation;
+    const validation = booking.state.st_validation;
     expect(validation.code).toEqual(200);
     expect(validation.message).toEqual('OK');
+  });
+});
+
+describe('BabysitterBooking endTime', () => {
+  it('returns a 400 error if endTime is later than 4:00AM', () => {
+    const endTime = {
+      hour: 6,
+      minutes: 0,
+      period: 'AM'
+    };
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const validation = booking.state.et_validation;
+    expect(validation.code).toEqual(400);
+    expect(validation.message).toEqual('End time is later than the allowed time.');
   });
 });
