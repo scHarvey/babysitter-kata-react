@@ -123,7 +123,9 @@ class BabysitterBooking extends React.Component {
   validateEndTime = (proposedEndTime) => {
     const latestEndTime = this.props.latestEndTime;
     let validEndTime = false;
-    if (latestEndTime.hour >= proposedEndTime.hour) {
+    if (latestEndTime.hour > proposedEndTime.hour) {
+      validEndTime = true;
+    } else if (latestEndTime.hour === proposedEndTime.hour && latestEndTime.minutes >= proposedEndTime.minutes) {
       validEndTime = true;
     } else if (proposedEndTime.period === 'PM') {
       validEndTime = true;
