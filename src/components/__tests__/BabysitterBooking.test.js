@@ -22,8 +22,8 @@ describe('BabysitterBooking', () => {
     // console.log(form);
     ReactTestUtils.Simulate.submit(form);
 
-    const message = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'validation_message');
-    //console.log(message);
-    expect(message.textContent).toEqual('Start time is earlier than the allowed time.');
+    const validation = booking.state.validation;
+    expect(validation.code).toEqual(400);
+    expect(validation.message).toEqual('Start time is earlier than the allowed time.');
   });
 });

@@ -44,12 +44,12 @@ class BabysitterBooking extends React.Component {
     let validationMessage = {};
     if (this.validDateStartTime(proposedStartTime)) {
       validationMessage = {
-        code: '200',
+        code: 200,
         message: 'OK'
       };
     } else {
       validationMessage = {
-        code: '400',
+        code: 400,
         message: 'Start time is earlier than the allowed time.'
       };
     }
