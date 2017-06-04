@@ -118,4 +118,22 @@ describe('BabysitterBooking endTime', () => {
     expect(validation.code).toEqual(200);
     expect(validation.message).toEqual('OK');
   });
+
+  it('returns a 200 if endTime is 4:00AM', () => {
+    const endTime = {
+      hour: 4,
+      minutes: 0,
+      period: 'AM'
+    };
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const validation = booking.state.et_validation;
+    expect(validation.code).toEqual(200);
+    expect(validation.message).toEqual('OK');
+  });
 });
