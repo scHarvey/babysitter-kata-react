@@ -13,7 +13,17 @@ class BabysitterBooking extends React.Component {
       minutes: PropTypes.number,
       period: PropTypes.string
     }),
+    latestEndTime: PropTypes.shape({
+      hour: PropTypes.number,
+      minutes: PropTypes.number,
+      period: PropTypes.string
+    }),
     startTime: PropTypes.shape({
+      hour: PropTypes.number,
+      minutes: PropTypes.number,
+      period: PropTypes.string
+    }),
+    endTime: PropTypes.shape({
       hour: PropTypes.number,
       minutes: PropTypes.number,
       period: PropTypes.string
@@ -26,43 +36,64 @@ class BabysitterBooking extends React.Component {
   constructor() {
     super();
     this.state = {
-      validation: {
+      st_validation: {
+        code: 0,
+        message: 'OK'
+      },
+      et_validation: {
         code: 0,
         message: 'OK'
       }
-    };
+    }
   }
 
   /**
    * Validates a Booking.
    * @method
    * @param {object} proposedStartTime - An object represention of the booking startTime
-   * @returns {object} response - An object with a code and a message.
-   * example: { code: '200', message: 'OK' }
+   * @param {object} proposedEndTime - An object representation of the booking endTime
   */
-  validateBooking = (proposedStartTime) => {
-    let validationMessage = {};
-    if (this.validDateStartTime(proposedStartTime)) {
-      validationMessage = {
+  validateBooking = (proposedStartTime, proposedEndTime) => {
+    let st_validationMessage = {};
+    let et_validationMessage = {};
+
+    if (this.validateStartTime(proposedStartTime)) {
+      st_validationMessage = {
         code: 200,
         message: 'OK'
       };
     } else {
-      validationMessage = {
+      st_validationMessage = {
         code: 400,
         message: 'Start time is earlier than the allowed time.'
       };
     }
-    return validationMessage;
+
+    if (!this.validateEndTime(proposedEndTime)) {
+      et_validationMessage = {
+        code: 400,
+        message: 'End time is later than the allowed time.'
+      };
+    }
+    this.setState({
+      st_validation: {
+        code: st_validationMessage.code,
+        message: st_validationMessage.message
+      },
+      et_validation: {
+        code: et_validationMessage.code,
+        message: et_validationMessage.message
+      }
+    });
   }
 
   /**
-   * Makes sure that a propsed booking meets the house rules for start time.
+   * Makes sure that a proposed booking meets the house rules for start time.
    * @method
    * @param {object} proposedStartTime - An object represention of a startTime
    * @returns {object} boolean - True if valid | False if invalid.
   */
-  validDateStartTime = (proposedStartTime) => {
+  validateStartTime = (proposedStartTime) => {
     const est = this.props.earliestStartTime;
     let validStartTime = false;
     // in our simple case start time is always PM, so an AM end time indicates the next day
@@ -79,19 +110,31 @@ class BabysitterBooking extends React.Component {
   }
 
   /**
+   * Makes sure that a proposed booking meets the house rules for end time.
+   * @method
+   * @param {object} proposedEndTime - An object represention of a endTime
+   * @returns {object} boolean - True if valid | False if invalid.
+  */
+  validateEndTime = (proposedEndTime) => {
+    const lendt = this.props.latestEndTime;
+    let validEndTime = false;
+    if (lendt.hour > proposedEndTime.hour) {
+      validEndTime = true;
+    } else if (proposedEndTime.period === 'PM') {
+      validEndTime = true;
+    }
+    return validEndTime;
+  }
+
+  /**
    * Routes our form's submit button to the proper methods
    * @method
   */
   handleSubmit = (e) => {
     e.preventDefault();
     const startTime = this.props.startTime;
-    const validation_msg = this.validateBooking(startTime);
-    this.setState({
-      validation: {
-        code: validation_msg.code,
-        message: validation_msg.message
-      }
-    });
+    const endTime = this.props.endTime;
+    this.validateBooking(startTime, endTime);
   }
 
   /**
@@ -100,7 +143,8 @@ class BabysitterBooking extends React.Component {
   render() {
     return (
         <div className="booking_wrapper">
-          <div className="validation_message">{this.state.validation.message}</div>
+          <div className="st_validation_message">{this.state.st_validation.message}</div>
+          <div className="et_validation_message">{this.state.et_validation.message}</div>
           <form onSubmit={this.handleSubmit} className="booking_form">
             <input type="submit" className="submit_button" value="Submit Booking" />
           </form>
@@ -115,8 +159,18 @@ BabysitterBooking.defaultProps = {
     minutes: 0,
     period: 'PM'
   },
-  startTime: {
+  latestEndTime: {
     hour: 4,
+    minutes: 0,
+    period: 'AM'
+  },
+  startTime: {
+    hour: 5,
+    minutes: 0,
+    period: 'PM'
+  },
+  endTime: {
+    hour: 6,
     minutes: 0,
     period: 'PM'
   }
