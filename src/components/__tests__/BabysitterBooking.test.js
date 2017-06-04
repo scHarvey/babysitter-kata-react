@@ -17,13 +17,49 @@ describe('BabysitterBooking', () => {
     };
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
-    // console.log(booking);
+
     const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
-    // console.log(form);
+
     ReactTestUtils.Simulate.submit(form);
 
     const validation = booking.state.validation;
     expect(validation.code).toEqual(400);
     expect(validation.message).toEqual('Start time is earlier than the allowed time.');
+  });
+
+  it('returns a 200 OK if startTime is later than 5:00PM', () => {
+    const startTime = {
+      hour: 6,
+      minutes: 0,
+      period: 'PM'
+    };
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const validation = booking.state.validation;
+    expect(validation.code).toEqual(200);
+    expect(validation.message).toEqual('OK');
+  });
+
+  it('returns a 200 OK if startTime is 5:00PM', () => {
+    const startTime = {
+      hour: 5,
+      minutes: 0,
+      period: 'PM'
+    };
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const validation = booking.state.validation;
+    expect(validation.code).toEqual(200);
+    expect(validation.message).toEqual('OK');
   });
 });
