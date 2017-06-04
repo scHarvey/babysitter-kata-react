@@ -69,7 +69,12 @@ class BabysitterBooking extends React.Component {
       };
     }
 
-    if (!this.validateEndTime(proposedEndTime)) {
+    if (this.validateEndTime(proposedEndTime)) {
+      et_validationMessage = {
+        code: 200,
+        message: 'OK'
+      };
+    } else {
       et_validationMessage = {
         code: 400,
         message: 'End time is later than the allowed time.'
@@ -116,9 +121,9 @@ class BabysitterBooking extends React.Component {
    * @returns {object} boolean - True if valid | False if invalid.
   */
   validateEndTime = (proposedEndTime) => {
-    const lendt = this.props.latestEndTime;
+    const latestEndTime = this.props.latestEndTime;
     let validEndTime = false;
-    if (lendt.hour > proposedEndTime.hour) {
+    if (latestEndTime.hour > proposedEndTime.hour) {
       validEndTime = true;
     } else if (proposedEndTime.period === 'PM') {
       validEndTime = true;
