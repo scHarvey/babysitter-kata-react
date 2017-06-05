@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Simple Selector for Time
+*/
 class TimePicker extends React.Component {
   static propTypes = {
     callback: PropTypes.func.isRequired,
@@ -11,22 +14,21 @@ class TimePicker extends React.Component {
       hour: PropTypes.number,
       minutes: PropTypes.number,
       period: PropTypes.string
-    }).isRequired
+    }).isRequired,
+    color: PropTypes.string
   }
 
-
   /**
-   * Builds a Time Selector
+   * Builds a Time Selector's Options
    * @method
   */
   timeOptions = () => {
-    let options = [];
+    const options = [];
     let optionsCount = 0;
     let hour = 0;
-    let period = 'AM';
+    let period = '';
 
-
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 24; i += 1) {
       if (i === 0) {
         hour = 12;
         period = 'AM';
@@ -82,4 +84,7 @@ class TimePicker extends React.Component {
   }
 };
 
+TimePicker.defaultProps = {
+  color: 'green'
+}
 export default TimePicker;

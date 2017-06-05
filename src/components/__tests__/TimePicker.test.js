@@ -13,7 +13,7 @@ describe('Selected TimePicker for StartTime', () => {
     const testTime = {
       hour: 5,
       minutes: 30,
-      period: "PM"
+      period: 'PM'
     };
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
@@ -31,12 +31,12 @@ describe('Selected TimePicker for StartTime', () => {
     const startTime = {
       hour: 5,
       minutes: 30,
-      period: "PM"
+      period: 'PM'
     };
     const endTime = {
       hour: 9,
       minutes: 30,
-      period: "PM"
+      period: 'PM'
     };
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
@@ -58,8 +58,9 @@ describe('Selected TimePicker for StartTime', () => {
   });
 
   it('properly accepts default values', () => {
-    const startTime = "5|0|PM";
-    const endTime = "9|0|PM";
+    const startTime = '5|0|PM';
+    const endTime = '9|0|PM';
+
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
     const selectStart = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time_select');
