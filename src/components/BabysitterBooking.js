@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TimePicker from './TimePicker';
 
 /**
  * Simple Representation of a Babysitter Booking Calculator
@@ -43,10 +44,27 @@ class BabysitterBooking extends React.Component {
       et_validation: {
         code: 0,
         message: 'OK'
+      },
+      startTime: {
+        hour: 0,
+        minutes: 0,
+        period: ''
       }
     }
   }
 
+  /**
+   * @method sets up state with either default of passed in props
+  */
+  componentWillMount() {
+    this.setState({
+      startTime: {
+        hour: this.props.startTime.hour,
+        minutes: this.props.startTime.minutes,
+        period: this.props.startTime.period
+      }
+    });
+  }
   /**
    * Validates a Booking.
    * @method
@@ -139,9 +157,23 @@ class BabysitterBooking extends React.Component {
   */
   handleSubmit = (e) => {
     e.preventDefault();
-    const startTime = this.props.startTime;
+    const startTime = this.state.startTime;
     const endTime = this.props.endTime;
     this.validateBooking(startTime, endTime);
+  }
+
+  /**
+   * Handles the onChange event for our startTimePicker
+   * @method
+  */
+  startTimePickerChange = (value) => {
+    this.setState({
+      startTime: {
+        hour: value.hour,
+        minutes: value.minutes,
+        period: value.period
+      }
+    });
   }
 
   /**
@@ -149,13 +181,14 @@ class BabysitterBooking extends React.Component {
   */
   render() {
     return (
-        <div className="booking_wrapper">
-          <div className="st_validation_message">{this.state.st_validation.message}</div>
-          <div className="et_validation_message">{this.state.et_validation.message}</div>
-          <form onSubmit={this.handleSubmit} className="booking_form">
-            <input type="submit" className="submit_button" value="Submit Booking" />
-          </form>
-        </div>
+      <div className="booking_wrapper">
+        <div className="st_validation_message">{this.state.st_validation.message}</div>
+        <div className="et_validation_message">{this.state.et_validation.message}</div>
+        <form onSubmit={this.handleSubmit} className="booking_form">
+          <TimePicker className="start_time_picker" defaultTime={this.props.startTime} label="Start Time" propClass="start_time_select" callback={this.startTimePickerChange.bind(this)} />
+          <input type="submit" className="submit_button" value="Submit Booking" />
+        </form>
+      </div>
     );
   }
 }
