@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 
 class TimePicker extends React.Component {
   static propTypes = {
-    callback: PropTypes.func.isRequired
+    callback: PropTypes.func.isRequired,
+    stateVar: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    propClass: PropTypes.string.isRequired
   }
 
 
   /**
    * Builds a Time Selector
    * @method
-   * @param {object} selectedTime - An object represention of the selected/default time
   */
-  timeOptions = (selectedTime) => {
+  timeOptions = () => {
     let options = [];
     let optionsCount = 0;
     let hour = 0;
@@ -55,7 +57,7 @@ class TimePicker extends React.Component {
       period: selectValue[2]
     };
 
-    this.props.callback(selectedTime);
+    this.props.callback(this.props.stateVar, selectedTime);
   }
 
   /**
@@ -66,14 +68,12 @@ class TimePicker extends React.Component {
       <div className="form-group">
         <label htmlFor="timepicker" className="col-sm-2 control-label">{this.props.label}</label>
         <div className="col-sm-10">
-          <select name="timepicker" className={this.props.propClass} onChange={this.timeChange} >
-            {this.timeOptions(this.props.defaultTime)}
+          <select name={this.props.stateVar} className={this.props.propClass} onChange={this.timeChange} >
+            {this.timeOptions()}
           </select>
         </div>
       </div>
     );
   }
 };
-
-
 export default TimePicker;

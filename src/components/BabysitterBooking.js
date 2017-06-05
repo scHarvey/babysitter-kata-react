@@ -49,6 +49,11 @@ class BabysitterBooking extends React.Component {
         hour: 0,
         minutes: 0,
         period: ''
+      },
+      endTime: {
+        hour: 0,
+        minutes: 0,
+        period: ''
       }
     }
   }
@@ -62,6 +67,11 @@ class BabysitterBooking extends React.Component {
         hour: this.props.startTime.hour,
         minutes: this.props.startTime.minutes,
         period: this.props.startTime.period
+      },
+      endTime: {
+        hour: this.props.endTime.hour,
+        minutes: this.props.endTime.minutes,
+        period: this.props.endTime.period
       }
     });
   }
@@ -163,17 +173,31 @@ class BabysitterBooking extends React.Component {
   }
 
   /**
-   * Handles the onChange event for our startTimePicker
+   * Handles the onChange event for our timePickers
+   * This isn't ideal as this function is now dependant on the child component
+   * May look into Redux for state management in a later version
    * @method
+   * @param {string} stateVar - which state var should we update
+   * @returns {object} stateValue - time object.
   */
-  startTimePickerChange = (value) => {
-    this.setState({
-      startTime: {
-        hour: value.hour,
-        minutes: value.minutes,
-        period: value.period
-      }
-    });
+  timePickerChange = (stateVar, stateValue) => {
+    if (stateVar === 'startTime') {
+      this.setState({
+        startTime: {
+          hour: stateValue.hour,
+          minutes: stateValue.minutes,
+          period: stateValue.period
+        }
+      });
+    } else if (stateVar === 'endTime') {
+      this.setState({
+        endTime: {
+          hour: stateValue.hour,
+          minutes: stateValue.minutes,
+          period: stateValue.period
+        }
+      });
+    }
   }
 
   /**
@@ -185,7 +209,8 @@ class BabysitterBooking extends React.Component {
         <div className="st_validation_message">{this.state.st_validation.message}</div>
         <div className="et_validation_message">{this.state.et_validation.message}</div>
         <form onSubmit={this.handleSubmit} className="booking_form">
-          <TimePicker className="start_time_picker" defaultTime={this.props.startTime} label="Start Time" propClass="start_time_select" callback={this.startTimePickerChange.bind(this)} />
+          <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" callback={this.timePickerChange.bind(this)} />
+          <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" callback={this.timePickerChange.bind(this)} />
           <input type="submit" className="submit_button" value="Submit Booking" />
         </form>
       </div>
