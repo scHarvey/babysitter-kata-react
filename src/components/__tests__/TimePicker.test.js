@@ -61,6 +61,7 @@ describe('Selected TimePicker for StartTime', () => {
     const startTime = '5|0|PM';
     const endTime = '9|0|PM';
 
+
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
     const selectStart = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time_select');
     const selectEnd = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'end_time_select');
