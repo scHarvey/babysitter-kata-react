@@ -1,11 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import TimePicker from 'rc-time-picker';
-import 'rc-time-picker/assets/index.css';
-
-/* Time Picker Setup */
-const format = 'h:mm a';
+import TimePicker from './TimePicker';
 
 /**
  * Simple Representation of a Babysitter Booking Calculator
@@ -58,6 +53,9 @@ class BabysitterBooking extends React.Component {
     }
   }
 
+  /**
+   * @method sets up state with either default of passed in props
+  */
   componentWillMount() {
     this.setState({
       startTime: {
@@ -67,7 +65,6 @@ class BabysitterBooking extends React.Component {
       }
     });
   }
-
   /**
    * Validates a Booking.
    * @method
@@ -162,16 +159,19 @@ class BabysitterBooking extends React.Component {
     e.preventDefault();
     const startTime = this.state.startTime;
     const endTime = this.props.endTime;
-    console.log(startTime);
     this.validateBooking(startTime, endTime);
   }
 
+  /**
+   * Handles the onChange event for our startTimePicker
+   * @method
+  */
   startTimePickerChange = (value) => {
     this.setState({
       startTime: {
-        hour: value.format('h'),
-        minutes: value.format('m'),
-        period: value.format('A')
+        hour: value.hour,
+        minutes: value.minutes,
+        period: value.period
       }
     });
   }
@@ -185,15 +185,7 @@ class BabysitterBooking extends React.Component {
         <div className="st_validation_message">{this.state.st_validation.message}</div>
         <div className="et_validation_message">{this.state.et_validation.message}</div>
         <form onSubmit={this.handleSubmit} className="booking_form">
-          <div>Start Time :
-            <TimePicker
-              className="startTimePicker"
-              showSecond={false}
-              onChange={this.startTimePickerChange}
-              format={format}
-              use12Hours
-            />
-          </div>
+          <TimePicker className="start_time_picker" defaultTime={this.props.startTime} label="Start Time" propClass="start_time_select" callback={this.startTimePickerChange.bind(this)} />
           <input type="submit" className="submit_button" value="Submit Booking" />
         </form>
       </div>
