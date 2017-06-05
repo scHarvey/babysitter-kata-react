@@ -6,7 +6,12 @@ class TimePicker extends React.Component {
     callback: PropTypes.func.isRequired,
     stateVar: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    propClass: PropTypes.string.isRequired
+    propClass: PropTypes.string.isRequired,
+    defaultTime: PropTypes.shape({
+      hour: PropTypes.number,
+      minutes: PropTypes.number,
+      period: PropTypes.string
+    }).isRequired
   }
 
 
@@ -68,7 +73,7 @@ class TimePicker extends React.Component {
       <div className="form-group">
         <label htmlFor="timepicker" className="col-sm-2 control-label">{this.props.label}</label>
         <div className="col-sm-10">
-          <select name={this.props.stateVar} className={this.props.propClass} onChange={this.timeChange} >
+          <select name={this.props.stateVar} value={`${this.props.defaultTime.hour}|${this.props.defaultTime.minutes}|${this.props.defaultTime.period}`} className={this.props.propClass} onChange={this.timeChange}>
             {this.timeOptions()}
           </select>
         </div>
@@ -76,4 +81,5 @@ class TimePicker extends React.Component {
     );
   }
 };
+
 export default TimePicker;

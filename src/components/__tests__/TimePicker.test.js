@@ -48,9 +48,6 @@ describe('Selected TimePicker for StartTime', () => {
     const returnedStartTime = booking.state.startTime;
     const returnedEndTime = booking.state.endTime;
 
-    console.log(returnedStartTime);
-    console.log(returnedEndTime);
-
     expect(returnedStartTime.hour).toEqual(startTime.hour);
     expect(returnedStartTime.minutes).toEqual(startTime.minutes);
     expect(returnedStartTime.period).toEqual(startTime.period);
@@ -58,5 +55,25 @@ describe('Selected TimePicker for StartTime', () => {
     expect(returnedEndTime.hour).toEqual(endTime.hour);
     expect(returnedEndTime.minutes).toEqual(endTime.minutes);
     expect(returnedEndTime.period).toEqual(endTime.period);
+  });
+
+  it('properly accepts default values', () => {
+    const startTime = "5|0|PM";
+    const endTime = "9|0|PM";
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
+    const selectStart = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time_select');
+    const selectEnd = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'end_time_select');
+
+    const initialStart = selectStart.value;
+    const initialEnd = selectEnd.value;
+
+    expect(initialStart.hour).toEqual(startTime.hour);
+    expect(initialStart.minutes).toEqual(startTime.minutes);
+    expect(initialStart.period).toEqual(startTime.period);
+
+    expect(endTime.hour).toEqual(endTime.hour);
+    expect(endTime.minutes).toEqual(endTime.minutes);
+    expect(endTime.period).toEqual(endTime.period);
   });
 });
