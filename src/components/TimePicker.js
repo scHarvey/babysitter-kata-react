@@ -14,8 +14,7 @@ class TimePicker extends React.Component {
       hour: PropTypes.number,
       minutes: PropTypes.number,
       period: PropTypes.string
-    }).isRequired,
-    color: PropTypes.string
+    }).isRequired
   }
 
   /**
@@ -72,9 +71,9 @@ class TimePicker extends React.Component {
   */
   render() {
     return (
-      <div className="form-group">
-        <label htmlFor="timepicker" className="col-sm-2 control-label">{this.props.label}</label>
-        <div className="col-sm-10">
+      <div>
+        <div>
+          <label htmlFor="timepicker">{this.props.label} : </label>
           <select name={this.props.stateVar} value={`${this.props.defaultTime.hour}|${this.props.defaultTime.minutes}|${this.props.defaultTime.period}`} className={this.props.propClass} onChange={this.timeChange}>
             {this.timeOptions()}
           </select>
@@ -84,7 +83,5 @@ class TimePicker extends React.Component {
   }
 };
 
-TimePicker.defaultProps = {
-  color: 'green'
-}
+
 export default TimePicker;
