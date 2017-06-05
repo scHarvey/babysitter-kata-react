@@ -1,27 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Simple Selector for Time
+*/
 class TimePicker extends React.Component {
   static propTypes = {
     callback: PropTypes.func.isRequired,
     stateVar: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    propClass: PropTypes.string.isRequired
+    propClass: PropTypes.string.isRequired,
+    defaultTime: PropTypes.shape({
+      hour: PropTypes.number,
+      minutes: PropTypes.number,
+      period: PropTypes.string
+    }).isRequired,
+    color: PropTypes.string
   }
 
-
   /**
-   * Builds a Time Selector
+   * Builds a Time Selector's Options
    * @method
   */
   timeOptions = () => {
-    let options = [];
+    const options = [];
     let optionsCount = 0;
     let hour = 0;
-    let period = 'AM';
+    let period = '';
 
-
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 24; i += 1) {
       if (i === 0) {
         hour = 12;
         period = 'AM';
@@ -65,10 +72,10 @@ class TimePicker extends React.Component {
   */
   render() {
     return (
-      <div className="form-group">
-        <label htmlFor="timepicker" className="col-sm-2 control-label">{this.props.label}</label>
-        <div className="col-sm-10">
-          <select name={this.props.stateVar} className={this.props.propClass} onChange={this.timeChange} >
+      <div>
+        <div className={`styled-select semi-square ${this.props.color}`}>
+          <label htmlFor="timepicker">{this.props.label} : </label>
+          <select name={this.props.stateVar} value={`${this.props.defaultTime.hour}|${this.props.defaultTime.minutes}|${this.props.defaultTime.period}`} className={this.props.propClass} onChange={this.timeChange}>
             {this.timeOptions()}
           </select>
         </div>
@@ -76,4 +83,8 @@ class TimePicker extends React.Component {
     );
   }
 };
+TimePicker.defaultProps = {
+  color: 'green'
+}
+
 export default TimePicker;
