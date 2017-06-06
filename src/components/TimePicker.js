@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Moment from 'moment';
+import MomentPropTypes from 'react-moment-proptypes';
 
 /**
  * Simple Selector for Time
@@ -10,13 +12,27 @@ class TimePicker extends React.Component {
     stateVar: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     propClass: PropTypes.string.isRequired,
-    defaultTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }).isRequired
+    defaultTime: MomentPropTypes.momentObj.isRequired
   }
 
+  /**
+   * @method sets up state with either default of passed in props
+  */
+  componentWillMount() {
+    this.setState({
+      selectedTime: this.props.defaultTime
+    });
+  }
+
+  /**
+   * @method sets up state with either default of passed in props
+  */
+  componentWillReceiveProps() {
+    this.setState({
+      selectedTime: this.props.defaultTime
+    });
+  }
+  
   /**
    * Builds a Time Selector's Options
    * @method
@@ -24,27 +40,14 @@ class TimePicker extends React.Component {
   timeOptions = () => {
     const options = [];
     let optionsCount = 0;
-    let hour = 0;
-    let period = '';
+    const optionsTimes = [];
 
-    for (let i = 0; i < 24; i += 1) {
-      if (i === 0) {
-        hour = 12;
-        period = 'AM';
-      } else if (i < 12) {
-        hour = i;
-        period = 'AM';
-      } else if (i === 12) {
-        hour = i;
-        period = 'PM';
-      } else {
-        hour = i - 12;
-        period = 'PM';
-      }
-
-      options[optionsCount] = <option key={optionsCount} value={`${hour}|0|${period}`}>{hour}:00 {period}</option>;
+    while (optionsCount < 47) {
+      optionsTimes[optionsCount] = new Moment().startOf('day').minutes(30 * optionsCount);
+      options[optionsCount] = <option key={optionsCount} value={optionsTimes[optionsCount]}>{optionsTimes[optionsCount].format('h:mm A')}</option>;
       optionsCount += 1;
-      options[optionsCount] = <option key={optionsCount} value={`${hour}|30|${period}`}>{hour}:30 {period}</option>;
+      optionsTimes[optionsCount] = new Moment().startOf('day').minutes(30 * optionsCount);
+      options[optionsCount] = <option key={optionsCount} value={optionsTimes[optionsCount]}>{optionsTimes[optionsCount].format('h:mm A')}</option>;
       optionsCount += 1;
     }
     return options;
@@ -56,12 +59,10 @@ class TimePicker extends React.Component {
    * @param {string} value - A parsable string representation of our time object.
   */
   timeChange = (e) => {
-    const selectValue = e.target.value.split('|');
-    const selectedTime = {
-      hour: Number.parseInt(selectValue[0], 10),
-      minutes: Number.parseInt(selectValue[1], 10),
-      period: selectValue[2]
-    };
+    const selectedTime = new Moment(e.target.value);
+    this.setState({
+      selectedTime: selectedTime
+    });
 
     this.props.callback(this.props.stateVar, selectedTime);
   }
@@ -74,7 +75,7 @@ class TimePicker extends React.Component {
       <div>
         <div>
           <label htmlFor="timepicker">{this.props.label} : </label>
-          <select name={this.props.stateVar} value={`${this.props.defaultTime.hour}|${this.props.defaultTime.minutes}|${this.props.defaultTime.period}`} className={this.props.propClass} onChange={this.timeChange}>
+          <select name={this.props.stateVar} value={`${this.state.selectedTime}`} className={this.props.propClass} onChange={this.timeChange}>
             {this.timeOptions()}
           </select>
         </div>
