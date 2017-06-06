@@ -6,8 +6,7 @@
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-moment-proptypes": "^1.4.0"
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
