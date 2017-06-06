@@ -16,8 +16,8 @@ describe('Selected TimePicker', () => {
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
     const select = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time_select');
 
-    ReactTestUtils.Simulate.change(select, { target: { value: `${testTime}` } });
-    const startTime = new Moment(booking.state.startTime);
+    ReactTestUtils.Simulate.change(select, { target: { value: testTime.format('X') } });
+    const startTime = new Moment.unix(booking.state.startTime);
 
     expect(startTime.isSame(testTime)).toBeTruthy();
   });
@@ -30,11 +30,11 @@ describe('Selected TimePicker', () => {
 
     const selectStart = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time_select');
     const selectEnd = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'end_time_select');
-    ReactTestUtils.Simulate.change(selectStart, { target: { value: `${startTime}` } });
-    ReactTestUtils.Simulate.change(selectEnd, { target: { value: `${endTime}` } });
+    ReactTestUtils.Simulate.change(selectStart, { target: { value: startTime.format('X') } });
+    ReactTestUtils.Simulate.change(selectEnd, { target: { value: endTime.format('X') } });
 
-    const returnedStartTime = new Moment(booking.state.startTime);
-    const returnedEndTime = new Moment(booking.state.endTime);
+    const returnedStartTime = new Moment.unix(booking.state.startTime);
+    const returnedEndTime = new Moment.unix(booking.state.endTime);
 
     expect(returnedStartTime.isSame(startTime)).toBeTruthy();
     expect(returnedEndTime.isSame(endTime)).toBeTruthy();
@@ -46,8 +46,8 @@ describe('Selected TimePicker', () => {
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking />);
 
-    const defaultStart = new Moment(booking.state.startTime);
-    const defaultEnd = new Moment(booking.state.endTime);
+    const defaultStart = new Moment.unix(booking.state.startTime);
+    const defaultEnd = new Moment.unix(booking.state.endTime);
 
     expect(defaultStart.isSame(startTime)).toBeTruthy();
     expect(defaultEnd.isSame(endTime)).toBeTruthy();
