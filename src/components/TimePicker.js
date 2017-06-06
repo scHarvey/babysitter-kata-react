@@ -14,22 +14,20 @@ class TimePicker extends React.Component {
     defaultTime: PropTypes.string.isRequired
   }
 
-  /**
-   * @method sets up state with either default of passed in props
-  */
-  componentWillMount() {
-    this.setState({
-      selectedTime: this.props.defaultTime
-    });
+  constructor() {
+    super();
+    this.state = { selectedTime: '' };
   }
 
   /**
    * @method sets up state with either default of passed in props
   */
-  componentWillReceiveProps() {
-    this.setState({
-      selectedTime: this.props.defaultTime
-    });
+  componentWillMount() {
+    if (this.state.selectedTime === '') {
+      this.setState({
+        selectedTime: this.props.defaultTime
+      });
+    }
   }
 
   /**
@@ -41,6 +39,8 @@ class TimePicker extends React.Component {
     const optionsTimes = [];
     let optionsCount = 0;
     let dayReference = '';
+
+
     while (optionsCount < 57) {
       if (optionsCount < 48) {
         dayReference = 'Today';
@@ -64,9 +64,11 @@ class TimePicker extends React.Component {
 
     this.setState({
       selectedTime: userSelectedTime
+    }, function() {
+      console.log('Param: ' + userSelectedTime);
+      console.log('State: ' + this.state.selectedTime);
+      this.props.callback(this.props.stateVar, this.state.selectedTime);
     });
-
-    this.props.callback(this.props.stateVar, userSelectedTime);
   }
 
   /**
