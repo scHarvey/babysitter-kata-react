@@ -1,42 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import Moment from 'moment';
+import MomentPropTypes from 'react-moment-proptypes';
 import TimePicker from './TimePicker';
+
 
 /**
  * Simple Representation of a Babysitter Booking Calculator
- * @constructor
 */
 class BabysitterBooking extends React.Component {
 
   static propTypes = {
-    earliestStartTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }),
-    latestEndTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }),
-    startTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }),
-    endTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    })
+    earliestStartTime: MomentPropTypes.momentObj,
+    latestEndTime: MomentPropTypes.momentObj,
+    startTime: MomentPropTypes.momentObj,
+    endTime: MomentPropTypes.momentObj
   }
 
   /**
-   * Constructor method to set up base state
+   * @method sets up state with either default of passed in props
   */
-  constructor() {
-    super();
-    this.state = {
+  componentWillMount() {
+    this.setState({
       st_validation: {
         code: 0,
         message: 'OK'
@@ -45,41 +29,15 @@ class BabysitterBooking extends React.Component {
         code: 0,
         message: 'OK'
       },
-      startTime: {
-        hour: 0,
-        minutes: 0,
-        period: ''
-      },
-      endTime: {
-        hour: 0,
-        minutes: 0,
-        period: ''
-      }
-    }
-  }
-
-  /**
-   * @method sets up state with either default of passed in props
-  */
-  componentWillMount() {
-    this.setState({
-      startTime: {
-        hour: this.props.startTime.hour,
-        minutes: this.props.startTime.minutes,
-        period: this.props.startTime.period
-      },
-      endTime: {
-        hour: this.props.endTime.hour,
-        minutes: this.props.endTime.minutes,
-        period: this.props.endTime.period
-      }
+      startTime: this.props.startTime,
+      endTime: this.props.endTime
     });
   }
   /**
    * Validates a Booking.
    * @method
-   * @param {object} proposedStartTime - An object represention of the booking startTime
-   * @param {object} proposedEndTime - An object representation of the booking endTime
+   * @param {momentObj} proposedStartTime - An object represention of the booking startTime
+   * @param {momentObj} proposedEndTime - An object representation of the booking endTime
   */
   validateBooking = (proposedStartTime, proposedEndTime) => {
     let st_validationMessage = {};
@@ -123,39 +81,29 @@ class BabysitterBooking extends React.Component {
   /**
    * Makes sure that a proposed booking meets the house rules for start time.
    * @method
-   * @param {object} proposedStartTime - An object represention of a startTime
-   * @returns {object} boolean - True if valid | False if invalid.
+   * @param {momentObj} proposedStartTime - An object represention of a startTime
+   * @returns {boolean} True if valid | False if invalid.
   */
   validateStartTime = (proposedStartTime) => {
-    const est = this.props.earliestStartTime;
     let validStartTime = false;
-    // in our simple case start time is always PM, so an AM end time indicates the next day
-    if (est.period === 'PM' && proposedStartTime.period === 'AM') {
+
+    if (proposedStartTime.isSameOrAfter(this.props.earliestStartTime) && proposedStartTime.isBefore(this.props.latestEndTime)) {
       validStartTime = true;
-    } else if (est.hour < proposedStartTime.hour) {
-      validStartTime = true;
-    } else if (est.hour === proposedStartTime.hour && est.minutes <= proposedStartTime.minutes) {
-      validStartTime = true;
-    } else {
-      validStartTime = false;
     }
+
     return validStartTime;
   }
 
   /**
    * Makes sure that a proposed booking meets the house rules for end time.
    * @method
-   * @param {object} proposedEndTime - An object represention of a endTime
-   * @returns {object} boolean - True if valid | False if invalid.
+   * @param {momentObj} proposedEndTime - An object represention of a endTime
+   * @returns {boolean} True if valid | False if invalid.
   */
   validateEndTime = (proposedEndTime) => {
-    const latestEndTime = this.props.latestEndTime;
     let validEndTime = false;
-    if (latestEndTime.hour > proposedEndTime.hour) {
-      validEndTime = true;
-    } else if (latestEndTime.hour === proposedEndTime.hour && latestEndTime.minutes >= proposedEndTime.minutes) {
-      validEndTime = true;
-    } else if (proposedEndTime.period === 'PM') {
+
+    if (proposedEndTime.isSameOrBefore(this.props.latestEndTime) && proposedEndTime.isAfter(this.props.earliestStartTime)) {
       validEndTime = true;
     }
     return validEndTime;
@@ -183,19 +131,11 @@ class BabysitterBooking extends React.Component {
   timePickerChange = (stateVar, stateValue) => {
     if (stateVar === 'startTime') {
       this.setState({
-        startTime: {
-          hour: stateValue.hour,
-          minutes: stateValue.minutes,
-          period: stateValue.period
-        }
+        startTime: stateValue
       });
     } else if (stateVar === 'endTime') {
       this.setState({
-        endTime: {
-          hour: stateValue.hour,
-          minutes: stateValue.minutes,
-          period: stateValue.period
-        }
+        endTime: stateValue
       });
     }
   }
@@ -210,7 +150,7 @@ class BabysitterBooking extends React.Component {
         <div className="et_validation_message">{this.state.et_validation.message}</div>
         <form onSubmit={this.handleSubmit} className="booking_form">
           <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.props.startTime} callback={this.timePickerChange.bind(this)} />
-          <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime"  defaultTime={this.props.endTime} callback={this.timePickerChange.bind(this)} />
+          <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.props.endTime} callback={this.timePickerChange.bind(this)} />
           <input type="submit" className="submit_button" value="Submit Booking" />
         </form>
       </div>
@@ -219,26 +159,10 @@ class BabysitterBooking extends React.Component {
 }
 
 BabysitterBooking.defaultProps = {
-  earliestStartTime: {
-    hour: 5,
-    minutes: 0,
-    period: 'PM'
-  },
-  latestEndTime: {
-    hour: 4,
-    minutes: 0,
-    period: 'AM'
-  },
-  startTime: {
-    hour: 5,
-    minutes: 0,
-    period: 'PM'
-  },
-  endTime: {
-    hour: 9,
-    minutes: 0,
-    period: 'PM'
-  }
-}
+  earliestStartTime: Moment().startOf('day').hour(17).minute(0),
+  latestEndTime: Moment().startOf('day').hour(28).minute(0),
+  startTime: Moment().startOf('day').hour(17).minute(0),
+  endTime: Moment().startOf('day').hour(21).minute(0)
+};
 
 export default BabysitterBooking;
