@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'moment';
-import MomentPropTypes from 'react-moment-proptypes';
+import PropTypes from 'prop-types';
 import TimePicker from './TimePicker';
 
 
@@ -10,10 +10,10 @@ import TimePicker from './TimePicker';
 class BabysitterBooking extends React.Component {
 
   static propTypes = {
-    earliestStartTime: MomentPropTypes.momentObj,
-    latestEndTime: MomentPropTypes.momentObj,
-    startTime: MomentPropTypes.momentObj,
-    endTime: MomentPropTypes.momentObj
+    earliestStartTime: PropTypes.string,
+    latestEndTime: PropTypes.string,
+    startTime: PropTypes.string,
+    endTime: PropTypes.string
   }
 
   /**
@@ -36,8 +36,8 @@ class BabysitterBooking extends React.Component {
   /**
    * Validates a Booking.
    * @method
-   * @param {momentObj} proposedStartTime - An object represention of the booking startTime
-   * @param {momentObj} proposedEndTime - An object representation of the booking endTime
+   * @param {string} proposedStartTime - A string represention of the booking startTime
+   * @param {string} proposedEndTime - A string representation of the booking endTime
   */
   validateBooking = (proposedStartTime, proposedEndTime) => {
     let st_validationMessage = {};
@@ -66,6 +66,8 @@ class BabysitterBooking extends React.Component {
         message: 'End time is later than the allowed time.'
       };
     }
+
+
     this.setState({
       st_validation: {
         code: st_validationMessage.code,
@@ -81,13 +83,15 @@ class BabysitterBooking extends React.Component {
   /**
    * Makes sure that a proposed booking meets the house rules for start time.
    * @method
-   * @param {momentObj} proposedStartTime - An object represention of a startTime
+   * @param {string} proposedStartTime - A string represention of a startTime
    * @returns {boolean} True if valid | False if invalid.
   */
   validateStartTime = (proposedStartTime) => {
     let validStartTime = false;
-
-    if (proposedStartTime.isSameOrAfter(this.props.earliestStartTime) && proposedStartTime.isBefore(this.props.latestEndTime)) {
+    const momentStartTime = new Moment.unix(proposedStartTime);
+    const momentEarliestStartTime = new Moment.unix(this.props.earliestStartTime);
+    const momentLatestEndTime = new Moment.unix(this.props.latestEndTime);
+    if (momentStartTime.isSameOrAfter(momentEarliestStartTime) && momentStartTime.isBefore(momentLatestEndTime)) {
       validStartTime = true;
     }
 
@@ -97,13 +101,16 @@ class BabysitterBooking extends React.Component {
   /**
    * Makes sure that a proposed booking meets the house rules for end time.
    * @method
-   * @param {momentObj} proposedEndTime - An object represention of a endTime
+   * @param {momentString} proposedEndTime - A object represention of a endTime
    * @returns {boolean} True if valid | False if invalid.
   */
   validateEndTime = (proposedEndTime) => {
     let validEndTime = false;
+    const momentEndTime = new Moment.unix(proposedEndTime);
+    const momentLatestEndTime = new Moment.unix(this.props.latestEndTime);
+    const momentEarliestStartTime = new Moment.unix(this.props.earliestStartTime);
 
-    if (proposedEndTime.isSameOrBefore(this.props.latestEndTime) && proposedEndTime.isAfter(this.props.earliestStartTime)) {
+    if (momentEndTime.isSameOrBefore(momentLatestEndTime) && momentEndTime.isAfter(momentEarliestStartTime)) {
       validEndTime = true;
     }
     return validEndTime;
@@ -159,10 +166,10 @@ class BabysitterBooking extends React.Component {
 }
 
 BabysitterBooking.defaultProps = {
-  earliestStartTime: Moment().startOf('day').hour(17).minute(0),
-  latestEndTime: Moment().startOf('day').hour(28).minute(0),
-  startTime: Moment().startOf('day').hour(17).minute(0),
-  endTime: Moment().startOf('day').hour(21).minute(0)
+  earliestStartTime: new Moment().startOf('day').hour(17).minute(0).format('X'),
+  latestEndTime: new Moment().startOf('day').hour(28).minute(0).format('X'),
+  startTime: new Moment().startOf('day').hour(17).minute(0).format('X'),
+  endTime: new Moment().startOf('day').hour(21).minute(0).format('X')
 };
 
 export default BabysitterBooking;

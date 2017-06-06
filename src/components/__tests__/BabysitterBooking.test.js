@@ -11,7 +11,7 @@ import BabysitterBooking from '../BabysitterBooking';
 describe('BabysitterBooking startTime ', () => {
 
   it('returns a 400 error if startTime is earlier than 5:00PM', () => {
-    const startTime = new Moment().startOf('day').hour(16).minute(30);
+    const startTime = new Moment().startOf('day').hour(16).minute(30).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
 
@@ -25,7 +25,7 @@ describe('BabysitterBooking startTime ', () => {
   });
 
   it('returns a 200 OK if startTime is later than 5:00PM', () => {
-    const startTime = new Moment().startOf('day').hour(17).minute(30);
+    const startTime = new Moment().startOf('day').hour(17).minute(30).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
 
@@ -39,7 +39,7 @@ describe('BabysitterBooking startTime ', () => {
   });
 
   it('returns a 200 OK if startTime is 5:00PM', () => {
-    const startTime = new Moment().startOf('day').hour(17).minute(0);
+    const startTime = new Moment().startOf('day').hour(17).minute(0).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
 
@@ -53,7 +53,7 @@ describe('BabysitterBooking startTime ', () => {
   });
 
   it('returns a 200 OK if startTime is 5:51PM', () => {
-    const startTime = new Moment().startOf('day').hour(17).minute(51);
+    const startTime = new Moment().startOf('day').hour(17).minute(51).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
 
@@ -67,7 +67,7 @@ describe('BabysitterBooking startTime ', () => {
   });
 
   it('returns a 200 OK if startTime is the next morning before 4am', () => {
-    const startTime = new Moment().startOf('day').hour(26).minute(30);
+    const startTime = new Moment().startOf('day').hour(26).minute(30).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
 
@@ -83,7 +83,7 @@ describe('BabysitterBooking startTime ', () => {
 
 describe('BabysitterBooking endTime', () => {
   it('returns a 400 error if endTime is later than 4:00AM', () => {
-    const endTime = new Moment().startOf('day').hour(30).minute(0);
+    const endTime = new Moment().startOf('day').hour(30).minute(0).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
 
@@ -97,7 +97,7 @@ describe('BabysitterBooking endTime', () => {
   });
 
   it('returns a 200 if endTime is earlier than 4:00AM', () => {
-    const endTime = new Moment().startOf('day').hour(24).minute(30);
+    const endTime = new Moment().startOf('day').hour(24).minute(30).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
 
@@ -111,7 +111,7 @@ describe('BabysitterBooking endTime', () => {
   });
 
   it('returns a 200 if endTime is 4:00AM', () => {
-    const endTime = new Moment().startOf('day').hour(28).minute(0);
+    const endTime = new Moment().startOf('day').hour(28).minute(0).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
 
@@ -125,7 +125,7 @@ describe('BabysitterBooking endTime', () => {
   });
 
   it('returns a 400 if endTime is 4:01AM', () => {
-    const endTime = new Moment().startOf('day').hour(28).minute(1);
+    const endTime = new Moment().startOf('day').hour(28).minute(1).format('X');
 
     const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
 
