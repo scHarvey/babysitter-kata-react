@@ -168,3 +168,57 @@ describe('BabysitterBooking endTime', () => {
     expect(validation.message).toEqual('End Time can not be earlier than Start Time.');
   });
 });
+
+describe('Thumbs Up and Down', () => {
+  it('Start Time displays a thumbs up on a valid time', () => {
+    const startTime = new Moment().startOf('day').hour(18).minute(0).format('X');
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const thumbsUp = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time tv_200');
+    expect(thumbsUp).toBeDefined();
+  });
+
+  it('End Time displays a thumbs up on a valid time', () => {
+    const endTime = new Moment().startOf('day').hour(20).minute(0).format('X');
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const thumbsUp = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'end_time tv_200');
+    expect(thumbsUp).toBeDefined();
+  });
+
+  it('Start Time displays a thumbs down on a invalid time', () => {
+    const startTime = new Moment().startOf('day').hour(1).minute(0).format('X');
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const thumbsUp = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'start_time tv_400');
+    expect(thumbsUp).toBeDefined();
+  });
+
+  it('End Time displays a thumbs down on a invalid time', () => {
+    const endTime = new Moment().startOf('day').hour(36).minute(0).format('X');
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking endTime={endTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const thumbsUp = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'end_time tv_400');
+    expect(thumbsUp).toBeDefined();
+  });
+});
