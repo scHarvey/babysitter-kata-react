@@ -62,7 +62,7 @@ class RateCalculator extends React.Component {
       // console.log('Before Bed Hours: ' + beforeBedHours);
       // console.log('After Bed Hours: ' + afterBedHours);
       // console.log('After Midnight Hours: ' + afterMidnightHours);
-      // console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
+       console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
 
       return rate;
     }
