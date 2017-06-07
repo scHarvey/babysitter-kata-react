@@ -17,6 +17,7 @@ class RateCalculator extends React.Component {
    * gets paid $12/hour from start-time to bedtime
    * gets paid $8/hour from bedtime to midnight
    * gets paid $16/hour from midnight to end of job
+   * gets paid for full hours (no fractional hours)
   */
     calculateRate = () => {
       const hourlyRates = {
@@ -36,6 +37,8 @@ class RateCalculator extends React.Component {
       let beforeBedHours = beforeBedDuration.asHours();
       if (beforeBedHours > totalHours) {
         beforeBedHours = totalHours;
+      } else if (beforeBedHours < 0) {
+        beforeBedHours = 0;
       }
 
       let afterBedDuration = new Moment.duration(momentEndTime.diff(momentBedTime));
@@ -56,7 +59,7 @@ class RateCalculator extends React.Component {
       // console.log('Before Bed Hours: ' + beforeBedHours);
       // console.log('After Bed Hours: ' + afterBedHours);
       // console.log('After Midnight Hours: ' + afterMidnightHours);
-      // console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
+      //console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
 
       return rate;
     }
