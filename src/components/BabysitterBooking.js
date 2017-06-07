@@ -3,6 +3,7 @@ import Moment from 'moment';
 import PropTypes from 'prop-types';
 import './BabysitterBooking.css';
 import TimePicker from './TimePicker';
+import RateCalculator from './RateCalculator';
 
 
 /**
@@ -14,7 +15,8 @@ class BabysitterBooking extends React.Component {
     earliestStartTime: PropTypes.string,
     latestEndTime: PropTypes.string,
     startTime: PropTypes.string,
-    endTime: PropTypes.string
+    endTime: PropTypes.string,
+    bedTime: PropTypes.string
   }
 
   /**
@@ -31,7 +33,9 @@ class BabysitterBooking extends React.Component {
         message: 'OK'
       },
       startTime: this.props.startTime,
-      endTime: this.props.endTime
+      endTime: this.props.endTime,
+      bedTime: this.props.bedTime
+
     });
   }
   /**
@@ -135,7 +139,7 @@ class BabysitterBooking extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const startTime = this.state.startTime;
-    const endTime = this.props.endTime;
+    const endTime = this.state.endTime;
     this.validateBooking(startTime, endTime);
 
     // calculate wages
@@ -162,6 +166,10 @@ class BabysitterBooking extends React.Component {
       }, function() {
         this.validateBooking(this.state.startTime, this.state.endTime);
       });
+    } else if (stateVar === 'bedTime') {
+      this.setState({
+        bedTime: stateValue
+      });
     }
 
   }
@@ -172,18 +180,26 @@ class BabysitterBooking extends React.Component {
   render() {
     return (
       <div className="booking_wrapper">
-        <form onSubmit={this.handleSubmit} className="booking_form">
-          <div className="time_picker">
-            <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
-            <span className={`start_time time_validation tv_${this.state.st_validation.code}`}></span>
-          </div>
-          <div className="time_picker">
-            <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
-            <span className={`end_time time_validation tv_${this.state.et_validation.code}`}></span>
-          </div>
-          <input type="submit" className="submit_button" value="Submit Booking" />
-        </form>
+        <div>
+          <form onSubmit={this.handleSubmit} className="booking_form">
+            <div className="time_picker">
+              <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
+              <span className={`start_time time_validation tv_${this.state.st_validation.code}`}></span>
+            </div>
+            <div className="time_picker">
+              <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
+              <span className={`end_time time_validation tv_${this.state.et_validation.code}`}></span>
+            </div>
+            <div className="time_picker">
+              <TimePicker className="bed_time_picker" label="Bed Time" propClass="bed_time_select" stateVar="bedTime" defaultTime={this.state.bedTime} callback={this.timePickerChange.bind(this)} />
+            </div>
+          </form>
+        </div>
+        <div className={`rate_calculator_wrapper tv_${this.state.st_validation.code} tv_${this.state.et_validation.code}`}>
+          <RateCalculator startTime={this.state.startTime} endTime={this.state.endTime} bedTime={this.state.bedTime} />
+        </div>
       </div>
+
     );
   }
 }
@@ -192,7 +208,8 @@ BabysitterBooking.defaultProps = {
   earliestStartTime: new Moment().startOf('day').hour(17).minute(0).format('X'),
   latestEndTime: new Moment().startOf('day').hour(28).minute(0).format('X'),
   startTime: new Moment().startOf('day').hour(17).minute(0).format('X'),
-  endTime: new Moment().startOf('day').hour(21).minute(0).format('X')
+  endTime: new Moment().startOf('day').hour(21).minute(0).format('X'),
+  bedTime: new Moment().startOf('day').hour(20).minute(0).format('X')
 };
 
 export default BabysitterBooking;
