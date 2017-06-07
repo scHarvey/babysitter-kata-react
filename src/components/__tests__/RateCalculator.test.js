@@ -111,4 +111,16 @@ describe('Rate Calculator', () => {
 
     expect(rate.textContent).toEqual('60');
   });
+
+  it('it calculates rate correctly for 7 hours with 1.5 of those after bedtime and 2.5 another midnight.', () => {
+    const startTime = new Moment().startOf('day').hour(19).minute(30).format('X');
+    const endTime = new Moment().startOf('day').hour(26).minute(30).format('X');
+    const bedTime = new Moment().startOf('day').hour(22).minute(30).format('X');
+
+    const rateCalculator = ReactTestUtils.renderIntoDocument(<RateCalculator startTime={startTime} endTime={endTime} bedTime={bedTime} />);
+
+    const rate = ReactTestUtils.findRenderedDOMComponentWithClass(rateCalculator, 'rate');
+
+    expect(rate.textContent).toEqual('88');
+  });
 });
