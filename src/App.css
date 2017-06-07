@@ -1,5 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-variant: small-caps;
+}
+
 .App {
   text-align: center;
+  min-width: 660px;
 }
 
 .App-logo {

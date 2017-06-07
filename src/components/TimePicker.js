@@ -42,13 +42,15 @@ class TimePicker extends React.Component {
     let dayReference = '';
 
 
-    while (optionsCount < 57) {
-      if (optionsCount < 48) {
+    while (optionsCount <= 22) {
+      optionsTimes[optionsCount] = new Moment().startOf('day').hours(17).minutes(30 * optionsCount);
+
+      if (optionsTimes[optionsCount].isBefore(Moment().startOf('day').hours(24))) {
         dayReference = 'Today';
       } else {
         dayReference = 'Tomorrow';
       }
-      optionsTimes[optionsCount] = new Moment().startOf('day').minutes(30 * optionsCount);
+
       options[optionsCount] = <option key={optionsCount} value={optionsTimes[optionsCount].format('X')}>{`${dayReference} ${optionsTimes[optionsCount].format('h:mm A')}`}</option>;
       optionsCount += 1;
     }

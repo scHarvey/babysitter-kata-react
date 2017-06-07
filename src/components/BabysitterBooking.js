@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import './BabysitterBooking.css';
 import TimePicker from './TimePicker';
 import RateCalculator from './RateCalculator';
+import RateKey from './RateKey';
 
 
 /**
@@ -179,23 +180,27 @@ class BabysitterBooking extends React.Component {
   */
   render() {
     return (
-      <div className="booking_wrapper">
-        <div>
-          <form onSubmit={this.handleSubmit} className="booking_form">
-            <div className="time_picker">
-              <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
-              <span className={`start_time time_validation tv_${this.state.st_validation.code}`}></span>
-            </div>
-            <div className="time_picker">
-              <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
-              <span className={`end_time time_validation tv_${this.state.et_validation.code}`}></span>
-            </div>
-            <div className="time_picker">
-              <TimePicker className="bed_time_picker" label="Bed Time" propClass="bed_time_select" stateVar="bedTime" defaultTime={this.state.bedTime} callback={this.timePickerChange.bind(this)} />
-            </div>
-          </form>
+      <div>
+        <div className="row">
+          <RateKey className="booking_key_wrapper"/>
+          <div className="booking_form_wrapper">
+            <form onSubmit={this.handleSubmit} className="booking_form">
+              <div className="time_picker">
+                <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
+                <span className={`start_time time_validation tv_${this.state.st_validation.code}`}></span>
+              </div>
+              <div className="time_picker">
+                <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
+                <span className={`end_time time_validation tv_${this.state.et_validation.code}`}></span>
+              </div>
+              <div className="time_picker">
+                <TimePicker className="bed_time_picker" label="Bed Time" propClass="bed_time_select" stateVar="bedTime" defaultTime={this.state.bedTime} callback={this.timePickerChange.bind(this)} />
+                <span className="time_validation bed_time_validation"></span>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className={`rate_calculator_wrapper tv_${this.state.st_validation.code} tv_${this.state.et_validation.code}`}>
+        <div className={`row rate_calculator_wrapper tv_${this.state.st_validation.code} tv_${this.state.et_validation.code}`}>
           <RateCalculator startTime={this.state.startTime} endTime={this.state.endTime} bedTime={this.state.bedTime} />
         </div>
       </div>
