@@ -10,6 +10,10 @@
   width: 675px;
 }
 
+.booking_form {
+  text-align:left;
+}
+
 .time_picker {
   display: flex;
   flex-direction: row;
@@ -41,10 +45,19 @@
   margin-top: 20px;
   font-size: 1.5em;
 }
-.rate_calculator_wrapper.tv_200 {
+
+.rate_calculator_wrapper.tv_200 .rate_label {
   display: block;
   }
 
-.rate_calculator_wrapper.tv_400 {
+.rate_calculator_wrapper.tv_400  .rate_label {
   display: none;
+}
+
+.rate_calculator_wrapper.tv_200 .rate_error_label {
+  display: none;
+  }
+
+.rate_calculator_wrapper.tv_400  .rate_error_label {
+  display: block;
 }

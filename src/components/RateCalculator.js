@@ -102,8 +102,8 @@ class RateCalculator extends React.Component {
   render() {
     return (
       <div>
-        <span className="rate_label">Rate for this booking:  $</span>
-        <span className="rate">{this.calculateRate()}</span>
+        <span className="rate_label">Rate for this booking:  $<span className="rate">{this.calculateRate()}</span></span>
+        <span className="rate_error_label">This is an invalid Booking.</span>
       </div>
     );
   }
