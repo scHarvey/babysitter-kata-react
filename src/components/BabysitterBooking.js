@@ -151,7 +151,6 @@ class BabysitterBooking extends React.Component {
   */
   timePickerChange = (stateVar, stateValue) => {
     if (stateVar === 'startTime') {
-      this.validateBooking
       this.setState({
         startTime: stateValue
       }, function() {
