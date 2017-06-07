@@ -66,8 +66,6 @@ class TimePicker extends React.Component {
     this.setState({
       selectedTime: userSelectedTime
     }, function() {
-      console.log('Param: ' + userSelectedTime);
-      console.log('State: ' + this.state.selectedTime);
       this.props.callback(this.props.stateVar, this.state.selectedTime);
     });
   }

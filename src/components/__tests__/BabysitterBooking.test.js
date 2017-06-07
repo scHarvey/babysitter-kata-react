@@ -68,8 +68,8 @@ describe('BabysitterBooking startTime ', () => {
 
   it('returns a 200 OK if startTime is the next morning before 4am', () => {
     const startTime = new Moment().startOf('day').hour(26).minute(30).format('X');
-
-    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} />);
+    const endTime = new Moment().startOf('day').hour(27).minute(0).format('X');
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} endTime={endTime} />);
 
     const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
 
@@ -79,6 +79,21 @@ describe('BabysitterBooking startTime ', () => {
     expect(validation.code).toEqual(200);
     expect(validation.message).toEqual('OK');
   });
+
+  it('returns a 400 if startTime is after endTime', () => {
+    const startTime = new Moment().startOf('day').hour(19).minute(30).format('X');
+    const endTime = new Moment().startOf('day').hour(19).minute(0).format('X');
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} endTime={endTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const validation = booking.state.st_validation;
+    expect(validation.code).toEqual(400);
+    expect(validation.message).toEqual('Start Time can not be later than End Time.');
+  });
+
 });
 
 describe('BabysitterBooking endTime', () => {
@@ -136,5 +151,20 @@ describe('BabysitterBooking endTime', () => {
     const validation = booking.state.et_validation;
     expect(validation.code).toEqual(400);
     expect(validation.message).toEqual('End time is later than the allowed time.');
+  });
+
+  it('returns a 400 if endTime is before startTime', () => {
+    const endTime = new Moment().startOf('day').hour(19).minute(0).format('X');
+    const startTime = new Moment().startOf('day').hour(19).minute(30).format('X');
+
+    const booking = ReactTestUtils.renderIntoDocument(<BabysitterBooking startTime={startTime} endTime={endTime} />);
+
+    const form = ReactTestUtils.findRenderedDOMComponentWithClass(booking, 'booking_form');
+
+    ReactTestUtils.Simulate.submit(form);
+
+    const validation = booking.state.et_validation;
+    expect(validation.code).toEqual(400);
+    expect(validation.message).toEqual('End Time can not be earlier than Start Time.');
   });
 });
