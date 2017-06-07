@@ -21,7 +21,8 @@ class RateCalculator extends React.Component {
     calculateRate = () => {
       const hourlyRates = {
         beforeBed: 12,
-        afterBed: 8
+        afterBed: 8,
+        afterMidnight: 16
       }
       const momentStartTime = new Moment.unix(this.props.startTime);
       const momentEndTime = new Moment.unix(this.props.endTime);
@@ -43,7 +44,19 @@ class RateCalculator extends React.Component {
         afterBedHours = totalHours;
       }
 
-      rate = (beforeBedHours * hourlyRates.beforeBed) + (afterBedHours * hourlyRates.afterBed);
+      let afterMidnightDuration = new Moment.duration(momentEndTime.diff(Moment().startOf('day').hours(24)));
+      let afterMidnightHours = afterMidnightDuration.asHours();
+      if (afterMidnightHours < 0) {
+        afterMidnightHours = 0;
+      }
+
+      rate = (beforeBedHours * hourlyRates.beforeBed);
+      rate += ((afterBedHours-afterMidnightHours) * hourlyRates.afterBed);
+      rate += (afterMidnightHours * hourlyRates.afterMidnight);
+      // console.log('Before Bed Hours: ' + beforeBedHours);
+      // console.log('After Bed Hours: ' + afterBedHours);
+      // console.log('After Midnight Hours: ' + afterMidnightHours);
+      // console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
 
       return rate;
     }
