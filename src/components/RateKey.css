@@ -1,0 +1,11 @@
+.rate_rules {
+  margin-top: 0;
+  list-style-type: none;
+  text-align:left;
+
+}
+
+.rate_rules li {
+  line-height: 1.5em;
+  padding-right: 15px;
+}
