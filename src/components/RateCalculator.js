@@ -102,7 +102,7 @@ class RateCalculator extends React.Component {
   render() {
     return (
       <div>
-        <span className="currency_type">$</span>
+        <span className="rate_label">Rate for this booking:  $</span>
         <span className="rate">{this.calculateRate()}</span>
       </div>
     );
