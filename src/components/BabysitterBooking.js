@@ -179,8 +179,8 @@ class BabysitterBooking extends React.Component {
   */
   render() {
     return (
-      <div className="booking_wrapper">
-        <div>
+      <div>
+        <div className="booking_wrapper">
           <form onSubmit={this.handleSubmit} className="booking_form">
             <div className="time_picker">
               <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
@@ -192,10 +192,11 @@ class BabysitterBooking extends React.Component {
             </div>
             <div className="time_picker">
               <TimePicker className="bed_time_picker" label="Bed Time" propClass="bed_time_select" stateVar="bedTime" defaultTime={this.state.bedTime} callback={this.timePickerChange.bind(this)} />
+              <span className="time_validation bed_time_validation"></span>
             </div>
           </form>
         </div>
-        <div className={`rate_calculator_wrapper tv_${this.state.st_validation.code} tv_${this.state.et_validation.code}`}>
+        <div className={`booking_wrapper rate_calculator_wrapper tv_${this.state.st_validation.code} tv_${this.state.et_validation.code}`}>
           <RateCalculator startTime={this.state.startTime} endTime={this.state.endTime} bedTime={this.state.bedTime} />
         </div>
       </div>
