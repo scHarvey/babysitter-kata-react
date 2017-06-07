@@ -28,27 +28,30 @@ class RateCalculator extends React.Component {
       const momentStartTime = new Moment.unix(this.props.startTime);
       const momentEndTime = new Moment.unix(this.props.endTime);
       const momentBedTime = new Moment.unix(this.props.bedTime);
+      let partialHour = false;
       let rate = 0;
 
       let totalDuration = new Moment.duration(momentEndTime.diff(momentStartTime));
       const totalHours = totalDuration.asHours();
-
+      if (totalHours < Math.round(totalHours)){
+        partialHour = true;
+      }
       let beforeBedDuration = new Moment.duration(momentBedTime.diff(momentStartTime));
-      let beforeBedHours = beforeBedDuration.asHours();
+      let beforeBedHours = Math.round(beforeBedDuration.asHours());
       if (beforeBedHours > totalHours) {
-        beforeBedHours = totalHours;
+        beforeBedHours = Math.round(totalHours);
       } else if (beforeBedHours < 0) {
         beforeBedHours = 0;
       }
 
       let afterBedDuration = new Moment.duration(momentEndTime.diff(momentBedTime));
-      let afterBedHours = afterBedDuration.asHours();
+      let afterBedHours = Math.round(afterBedDuration.asHours());
       if (afterBedHours > totalHours) {
         afterBedHours = totalHours;
       }
 
       let afterMidnightDuration = new Moment.duration(momentEndTime.diff(Moment().startOf('day').hours(24)));
-      let afterMidnightHours = afterMidnightDuration.asHours();
+      let afterMidnightHours = Math.round(afterMidnightDuration.asHours());
       if (afterMidnightHours < 0) {
         afterMidnightHours = 0;
       }
@@ -59,7 +62,7 @@ class RateCalculator extends React.Component {
       // console.log('Before Bed Hours: ' + beforeBedHours);
       // console.log('After Bed Hours: ' + afterBedHours);
       // console.log('After Midnight Hours: ' + afterMidnightHours);
-      //console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
+      // console.log(beforeBedHours + ' * ' + hourlyRates.beforeBed + ' + ' + '( ' + afterBedHours + ' - ' + afterMidnightHours + ' ) * ' + hourlyRates.afterBed + ' + ' + afterMidnightHours + ' * ' + hourlyRates.afterMidnight + ' = ' + rate);
 
       return rate;
     }
