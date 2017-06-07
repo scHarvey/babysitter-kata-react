@@ -1,84 +1,84 @@
 import React from 'react';
+import Moment from 'moment';
 import PropTypes from 'prop-types';
+import './BabysitterBooking.css';
+import TimePicker from './TimePicker';
+
 
 /**
  * Simple Representation of a Babysitter Booking Calculator
- * @constructor
 */
 class BabysitterBooking extends React.Component {
 
   static propTypes = {
-    earliestStartTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }),
-    latestEndTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }),
-    startTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    }),
-    endTime: PropTypes.shape({
-      hour: PropTypes.number,
-      minutes: PropTypes.number,
-      period: PropTypes.string
-    })
+    earliestStartTime: PropTypes.string,
+    latestEndTime: PropTypes.string,
+    startTime: PropTypes.string,
+    endTime: PropTypes.string
   }
 
   /**
-   * Constructor method to set up base state
+   * @method sets up state with either default of passed in props
   */
-  constructor() {
-    super();
-    this.state = {
+  componentWillMount() {
+    this.setState({
       st_validation: {
-        code: 0,
+        code: 200,
         message: 'OK'
       },
       et_validation: {
-        code: 0,
+        code: 200,
         message: 'OK'
-      }
-    }
+      },
+      startTime: this.props.startTime,
+      endTime: this.props.endTime
+    });
   }
-
   /**
    * Validates a Booking.
    * @method
-   * @param {object} proposedStartTime - An object represention of the booking startTime
-   * @param {object} proposedEndTime - An object representation of the booking endTime
+   * @param {string} proposedStartTime - A string represention of the booking startTime
+   * @param {string} proposedEndTime - A string representation of the booking endTime
   */
   validateBooking = (proposedStartTime, proposedEndTime) => {
     let st_validationMessage = {};
     let et_validationMessage = {};
+    const momentStartTime = new Moment.unix(proposedStartTime);
+    const momentEndTime = new Moment.unix(proposedEndTime);
 
-    if (this.validateStartTime(proposedStartTime)) {
-      st_validationMessage = {
-        code: 200,
-        message: 'OK'
-      };
-    } else {
+    if (momentStartTime.isAfter(momentEndTime)) {
       st_validationMessage = {
         code: 400,
-        message: 'Start time is earlier than the allowed time.'
+        message: 'Start Time can not be later than End Time.'
       };
-    }
-
-    if (this.validateEndTime(proposedEndTime)) {
-      et_validationMessage = {
-        code: 200,
-        message: 'OK'
-      };
-    } else {
       et_validationMessage = {
         code: 400,
-        message: 'End time is later than the allowed time.'
+        message: 'End Time can not be earlier than Start Time.'
       };
+    } else {
+      if (this.validateStartTime(proposedStartTime)) {
+        st_validationMessage = {
+          code: 200,
+          message: 'OK'
+        };
+      } else {
+        st_validationMessage = {
+          code: 400,
+          message: 'Start time is earlier than the allowed time.'
+        };
+      }
+
+      if (this.validateEndTime(proposedEndTime)) {
+        et_validationMessage = {
+          code: 200,
+          message: 'OK'
+        };
+      } else {
+        et_validationMessage = {
+          code: 400,
+          message: 'End time is later than the allowed time.'
+        };
+      }
     }
     this.setState({
       st_validation: {
@@ -95,39 +95,34 @@ class BabysitterBooking extends React.Component {
   /**
    * Makes sure that a proposed booking meets the house rules for start time.
    * @method
-   * @param {object} proposedStartTime - An object represention of a startTime
-   * @returns {object} boolean - True if valid | False if invalid.
+   * @param {string} proposedStartTime - A string represention of a startTime
+   * @returns {boolean} True if valid | False if invalid.
   */
   validateStartTime = (proposedStartTime) => {
-    const est = this.props.earliestStartTime;
     let validStartTime = false;
-    // in our simple case start time is always PM, so an AM end time indicates the next day
-    if (est.period === 'PM' && proposedStartTime.period === 'AM') {
+    const momentStartTime = new Moment.unix(proposedStartTime);
+    const momentEarliestStartTime = new Moment.unix(this.props.earliestStartTime);
+    const momentLatestEndTime = new Moment.unix(this.props.latestEndTime);
+    if (momentStartTime.isSameOrAfter(momentEarliestStartTime) && momentStartTime.isBefore(momentLatestEndTime)) {
       validStartTime = true;
-    } else if (est.hour < proposedStartTime.hour) {
-      validStartTime = true;
-    } else if (est.hour === proposedStartTime.hour && est.minutes <= proposedStartTime.minutes) {
-      validStartTime = true;
-    } else {
-      validStartTime = false;
     }
+
     return validStartTime;
   }
 
   /**
    * Makes sure that a proposed booking meets the house rules for end time.
    * @method
-   * @param {object} proposedEndTime - An object represention of a endTime
-   * @returns {object} boolean - True if valid | False if invalid.
+   * @param {momentString} proposedEndTime - A object represention of a endTime
+   * @returns {boolean} True if valid | False if invalid.
   */
   validateEndTime = (proposedEndTime) => {
-    const latestEndTime = this.props.latestEndTime;
     let validEndTime = false;
-    if (latestEndTime.hour > proposedEndTime.hour) {
-      validEndTime = true;
-    } else if (latestEndTime.hour === proposedEndTime.hour && latestEndTime.minutes >= proposedEndTime.minutes) {
-      validEndTime = true;
-    } else if (proposedEndTime.period === 'PM') {
+    const momentEndTime = new Moment.unix(proposedEndTime);
+    const momentLatestEndTime = new Moment.unix(this.props.latestEndTime);
+    const momentEarliestStartTime = new Moment.unix(this.props.earliestStartTime);
+
+    if (momentEndTime.isSameOrBefore(momentLatestEndTime) && momentEndTime.isAfter(momentEarliestStartTime)) {
       validEndTime = true;
     }
     return validEndTime;
@@ -139,9 +134,36 @@ class BabysitterBooking extends React.Component {
   */
   handleSubmit = (e) => {
     e.preventDefault();
-    const startTime = this.props.startTime;
+    const startTime = this.state.startTime;
     const endTime = this.props.endTime;
     this.validateBooking(startTime, endTime);
+
+    // calculate wages
+  }
+
+  /**
+   * Handles the onChange event for our timePickers
+   * This isn't ideal as this function is now dependant on the child component
+   * May look into Redux for state management in a later version
+   * @method
+   * @param {string} stateVar - which state var should we update
+   * @returns {object} stateValue - time object.
+  */
+  timePickerChange = (stateVar, stateValue) => {
+    if (stateVar === 'startTime') {
+      this.setState({
+        startTime: stateValue
+      }, function() {
+        this.validateBooking(this.state.startTime, this.state.endTime);
+      });
+    } else if (stateVar === 'endTime') {
+      this.setState({
+        endTime: stateValue
+      }, function() {
+        this.validateBooking(this.state.startTime, this.state.endTime);
+      });
+    }
+
   }
 
   /**
@@ -149,38 +171,28 @@ class BabysitterBooking extends React.Component {
   */
   render() {
     return (
-        <div className="booking_wrapper">
-          <div className="st_validation_message">{this.state.st_validation.message}</div>
-          <div className="et_validation_message">{this.state.et_validation.message}</div>
-          <form onSubmit={this.handleSubmit} className="booking_form">
-            <input type="submit" className="submit_button" value="Submit Booking" />
-          </form>
-        </div>
+      <div className="booking_wrapper">
+        <form onSubmit={this.handleSubmit} className="booking_form">
+          <div className="time_picker">
+            <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
+            <span className={`start_time time_validation tv_${this.state.st_validation.code}`}></span>
+          </div>
+          <div className="time_picker">
+            <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
+            <span className={`end_time time_validation tv_${this.state.et_validation.code}`}></span>
+          </div>
+          <input type="submit" className="submit_button" value="Submit Booking" />
+        </form>
+      </div>
     );
   }
 }
 
 BabysitterBooking.defaultProps = {
-  earliestStartTime: {
-    hour: 5,
-    minutes: 0,
-    period: 'PM'
-  },
-  latestEndTime: {
-    hour: 4,
-    minutes: 0,
-    period: 'AM'
-  },
-  startTime: {
-    hour: 5,
-    minutes: 0,
-    period: 'PM'
-  },
-  endTime: {
-    hour: 6,
-    minutes: 0,
-    period: 'PM'
-  }
-}
+  earliestStartTime: new Moment().startOf('day').hour(17).minute(0).format('X'),
+  latestEndTime: new Moment().startOf('day').hour(28).minute(0).format('X'),
+  startTime: new Moment().startOf('day').hour(17).minute(0).format('X'),
+  endTime: new Moment().startOf('day').hour(21).minute(0).format('X')
+};
 
 export default BabysitterBooking;

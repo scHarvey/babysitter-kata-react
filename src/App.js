@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { render } from 'react-dom';
-import logo from './logo.svg';
+import logo from './assets/clock.svg';
 import './App.css';
 import BabysitterBooking from './components/BabysitterBooking';
 
@@ -13,7 +12,7 @@ class App extends Component {
           <h2>Welcome to the BabySitter Booking Calculator</h2>
         </div>
         <p className="App-intro">
-          
+
         </p>
         <BabysitterBooking />
       </div>
