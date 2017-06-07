@@ -176,11 +176,11 @@ class BabysitterBooking extends React.Component {
         <form onSubmit={this.handleSubmit} className="booking_form">
           <div className="time_picker">
             <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
-            <span className={`time_validation tv_${this.state.st_validation.code}`}></span>
+            <span className={`start_time time_validation tv_${this.state.st_validation.code}`}></span>
           </div>
           <div className="time_picker">
             <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
-            <span className={`time_validation tv_${this.state.et_validation.code}`}></span>
+            <span className={`end_time time_validation tv_${this.state.et_validation.code}`}></span>
           </div>
           <input type="submit" className="submit_button" value="Submit Booking" />
         </form>
