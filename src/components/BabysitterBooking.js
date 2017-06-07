@@ -1,6 +1,7 @@
 import React from 'react';
 import Moment from 'moment';
 import PropTypes from 'prop-types';
+import './BabysitterBooking.css';
 import TimePicker from './TimePicker';
 
 
@@ -22,11 +23,11 @@ class BabysitterBooking extends React.Component {
   componentWillMount() {
     this.setState({
       st_validation: {
-        code: 0,
+        code: 200,
         message: 'OK'
       },
       et_validation: {
-        code: 0,
+        code: 200,
         message: 'OK'
       },
       startTime: this.props.startTime,
@@ -67,7 +68,6 @@ class BabysitterBooking extends React.Component {
       };
     }
 
-
     this.setState({
       st_validation: {
         code: st_validationMessage.code,
@@ -77,6 +77,8 @@ class BabysitterBooking extends React.Component {
         code: et_validationMessage.code,
         message: et_validationMessage.message
       }
+    }, function(){
+      console.log(this.state);
     });
   }
 
@@ -125,6 +127,8 @@ class BabysitterBooking extends React.Component {
     const startTime = this.state.startTime;
     const endTime = this.props.endTime;
     this.validateBooking(startTime, endTime);
+
+    // calculate wages
   }
 
   /**
@@ -137,14 +141,20 @@ class BabysitterBooking extends React.Component {
   */
   timePickerChange = (stateVar, stateValue) => {
     if (stateVar === 'startTime') {
+      this.validateBooking
       this.setState({
         startTime: stateValue
+      }, function() {
+        this.validateBooking(this.state.startTime, this.state.endTime);
       });
     } else if (stateVar === 'endTime') {
       this.setState({
         endTime: stateValue
+      }, function() {
+        this.validateBooking(this.state.startTime, this.state.endTime);
       });
     }
+
   }
 
   /**
@@ -153,11 +163,15 @@ class BabysitterBooking extends React.Component {
   render() {
     return (
       <div className="booking_wrapper">
-        <div className="st_validation_message">{this.state.st_validation.message}</div>
-        <div className="et_validation_message">{this.state.et_validation.message}</div>
         <form onSubmit={this.handleSubmit} className="booking_form">
-          <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
-          <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
+          <div className="time_picker">
+            <TimePicker className="start_time_picker" label="Start Time" propClass="start_time_select" stateVar="startTime" defaultTime={this.state.startTime} callback={this.timePickerChange.bind(this)} />
+            <span className={`time_validation tv_${this.state.st_validation.code}`}></span>
+          </div>
+          <div className="time_picker">
+            <TimePicker className="end_time_picker" label="End Time" propClass="end_time_select" stateVar="endTime" defaultTime={this.state.endTime} callback={this.timePickerChange.bind(this)} />
+            <span className={`time_validation tv_${this.state.et_validation.code}`}></span>
+          </div>
           <input type="submit" className="submit_button" value="Submit Booking" />
         </form>
       </div>

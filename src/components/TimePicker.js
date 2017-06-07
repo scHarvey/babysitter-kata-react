@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
+import './TimePicker.css';
 
 /**
  * Simple Selector for Time
@@ -76,13 +77,11 @@ class TimePicker extends React.Component {
   */
   render() {
     return (
-      <div>
-        <div>
-          <label htmlFor="timepicker">{this.props.label} : </label>
-          <select name={this.props.stateVar} value={this.state.selectedTime} className={this.props.propClass} onChange={this.timeChange}>
-            {this.timeOptions()}
-          </select>
-        </div>
+      <div className="time_picker_wrapper">
+        <label htmlFor="timepicker">{this.props.label} : </label>
+        <select name={this.props.stateVar} value={this.state.selectedTime} className={this.props.propClass} onChange={this.timeChange}>
+          {this.timeOptions()}
+        </select>
       </div>
     );
   }
