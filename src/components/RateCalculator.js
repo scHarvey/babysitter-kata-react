@@ -12,11 +12,6 @@ class RateCalculator extends React.Component {
     bedTime: PropTypes.string
   }
 
-  constructor() {
-    super();
-    // this.state = { rate: 0 };
-  }
-
   /**
    * @method caclulates a rate based on passed in parameters and business logic
    * gets paid $12/hour from start-time to bedtime
@@ -25,41 +20,33 @@ class RateCalculator extends React.Component {
   */
     calculateRate = () => {
       const hourlyRates = {
-        beforeBed: 12
+        beforeBed: 12,
+        afterBed: 8
       }
       const momentStartTime = new Moment.unix(this.props.startTime);
       const momentEndTime = new Moment.unix(this.props.endTime);
       const momentBedTime = new Moment.unix(this.props.bedTime);
-
-      let runningTime = momentStartTime;
-      let duration = new Moment.duration(momentEndTime.diff(momentStartTime));
-      let hours = duration.asHours();
-
       let rate = 0;
 
-      while (runningTime.isBefore(momentEndTime)) {
-        rate += hourlyRates.beforeBed;
+      let totalDuration = new Moment.duration(momentEndTime.diff(momentStartTime));
+      const totalHours = totalDuration.asHours();
 
-        runningTime.add(1, 'hours');
+      let beforeBedDuration = new Moment.duration(momentBedTime.diff(momentStartTime));
+      let beforeBedHours = beforeBedDuration.asHours();
+      if (beforeBedHours > totalHours) {
+        beforeBedHours = totalHours;
       }
 
-      return rate;
-      /*
-      this.setState({
-        rate: rate
-      });
-      */
-    }
+      let afterBedDuration = new Moment.duration(momentEndTime.diff(momentBedTime));
+      let afterBedHours = afterBedDuration.asHours();
+      if (afterBedHours > totalHours) {
+        afterBedHours = totalHours;
+      }
 
-  componentWillUpdate = (nextProps, nextState) => {
-/*
-    let update = true;
-    if (this.state.rate === nextState.rate) {
-      update = false;
+      rate = (beforeBedHours * hourlyRates.beforeBed) + (afterBedHours * hourlyRates.afterBed);
+
+      return rate;
     }
-    return update;
-*/
-  }
 
   /**
    * @return {string} - HTML markup for a TimePicker
