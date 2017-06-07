@@ -43,31 +43,43 @@ class BabysitterBooking extends React.Component {
   validateBooking = (proposedStartTime, proposedEndTime) => {
     let st_validationMessage = {};
     let et_validationMessage = {};
+    const momentStartTime = new Moment.unix(proposedStartTime);
+    const momentEndTime = new Moment.unix(proposedEndTime);
 
-    if (this.validateStartTime(proposedStartTime)) {
-      st_validationMessage = {
-        code: 200,
-        message: 'OK'
-      };
-    } else {
+    if (momentStartTime.isAfter(momentEndTime)) {
       st_validationMessage = {
         code: 400,
-        message: 'Start time is earlier than the allowed time.'
+        message: 'Start Time can not be later than End Time.'
       };
-    }
-
-    if (this.validateEndTime(proposedEndTime)) {
-      et_validationMessage = {
-        code: 200,
-        message: 'OK'
-      };
-    } else {
       et_validationMessage = {
         code: 400,
-        message: 'End time is later than the allowed time.'
+        message: 'End Time can not be earlier than Start Time.'
       };
-    }
+    } else {
+      if (this.validateStartTime(proposedStartTime)) {
+        st_validationMessage = {
+          code: 200,
+          message: 'OK'
+        };
+      } else {
+        st_validationMessage = {
+          code: 400,
+          message: 'Start time is earlier than the allowed time.'
+        };
+      }
 
+      if (this.validateEndTime(proposedEndTime)) {
+        et_validationMessage = {
+          code: 200,
+          message: 'OK'
+        };
+      } else {
+        et_validationMessage = {
+          code: 400,
+          message: 'End time is later than the allowed time.'
+        };
+      }
+    }
     this.setState({
       st_validation: {
         code: st_validationMessage.code,
@@ -77,8 +89,6 @@ class BabysitterBooking extends React.Component {
         code: et_validationMessage.code,
         message: et_validationMessage.message
       }
-    }, function(){
-      console.log(this.state);
     });
   }
 
