@@ -1,5 +1,5 @@
 # Kata project to demonstrate proficiency in TDD and OOP
-
+![screenshot](public/ui.png)
 ## Requirements
 
 * node

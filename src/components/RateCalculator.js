@@ -39,7 +39,7 @@ class RateCalculator extends React.Component {
 
       let totalDuration = new Moment.duration(momentEndTime.diff(momentStartTime));
       const totalHours = totalDuration.asHours();
-      if (totalHours < Math.round(totalHours)){
+      if (totalHours < Math.round(totalHours)) {
         requiresRounding = true;
       }
 
